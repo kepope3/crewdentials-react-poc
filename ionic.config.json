@@ -1,0 +1,7 @@
+{
+  "name": "crewdentials-v2",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
