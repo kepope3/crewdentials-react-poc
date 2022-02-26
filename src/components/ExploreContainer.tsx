@@ -14,7 +14,7 @@ import { collection, getFirestore } from "firebase/firestore";
 const ExploreContainer = () => {
   const globalContext = useContext(GlobalContext);
 
-  const [value, loading] = useCollectionData(
+  const [value, loading, error] = useCollectionData(
     collection(getFirestore(globalContext.firebaseApp), "users"),
     {
       snapshotListenOptions: { includeMetadataChanges: true },
@@ -23,11 +23,11 @@ const ExploreContainer = () => {
 
   return (
     <div className="container mx-auto">
-      {loading ? (
-        <IonSpinner />
-      ) : (
-        <IonCard>
-          <IonCardTitle className="p-4">List of users</IonCardTitle>
+      <IonCard>
+        <IonCardTitle className="p-4">List of users</IonCardTitle>
+        {loading ? (
+          <IonSpinner />
+        ) : (
           <IonList>
             {value?.map((user, i) => (
               <IonItem key={i}>
@@ -35,8 +35,8 @@ const ExploreContainer = () => {
               </IonItem>
             ))}
           </IonList>
-        </IonCard>
-      )}
+        )}
+      </IonCard>
     </div>
   );
 };
