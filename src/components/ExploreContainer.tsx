@@ -15,9 +15,7 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
   const [users, setUsers] = useState<Array<any>>();
 
   useEffect(() => {
-    globalContext.datastore.getUsers().then((users) => {
-      setUsers(users);
-    });
+    globalContext.datastore.getUsers().then((users: any) => setUsers(users));
   }, [globalContext.datastore]);
 
   return (
