@@ -67,7 +67,14 @@ const ExploreContainer = () => {
           <IonInput
             value={newUser}
             type="text"
-            onIonInput={(e: any) => setNewUser(e.target.value)}
+            onKeyUp={(e: any) => {
+              if (e.code === "Enter") {
+                addNewUser();
+              }
+            }}
+            onIonInput={(e: any) => {
+              setNewUser(e.target.value);
+            }}
           ></IonInput>
           <IonButton onClick={addNewUser}>Submit</IonButton>
         </IonItem>
