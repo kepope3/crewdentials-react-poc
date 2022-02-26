@@ -1,41 +1,53 @@
 import {
+  IonButton,
   IonCard,
   IonCardTitle,
+  IonInput,
   IonItem,
   IonLabel,
   IonList,
   IonSpinner,
 } from "@ionic/react";
-import { useContext } from "react";
-import { GlobalContext } from "../App";
-import { useCollectionData } from "react-firebase-hooks/firestore";
-import { collection, getFirestore } from "firebase/firestore";
+import { useState } from "react";
+import { useFirestore } from "../helpers/useFirestore";
 
 const ExploreContainer = () => {
-  const globalContext = useContext(GlobalContext);
+  const [newUser, setNewUser] = useState<string>();
+  const { documents, addDocument, isLoading } = useFirestore("users");
 
-  const [value, loading, error] = useCollectionData(
-    collection(getFirestore(globalContext.firebaseApp), "users"),
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    }
-  );
+  const addNewUser = () => {
+    addDocument({ name: newUser }).then(() => {
+      setNewUser("");
+    });
+  };
 
   return (
     <div className="container mx-auto">
       <IonCard>
         <IonCardTitle className="p-4">List of users</IonCardTitle>
-        {loading ? (
+        {isLoading ? (
           <IonSpinner />
         ) : (
           <IonList>
-            {value?.map((user, i) => (
+            {documents?.map((user, i) => (
               <IonItem key={i}>
                 <IonLabel>{user.name}</IonLabel>
               </IonItem>
             ))}
           </IonList>
         )}
+      </IonCard>
+      <IonCard>
+        <IonCardTitle className="p-4">Add new user</IonCardTitle>
+        <IonItem>
+          <IonLabel position="floating">Enter name</IonLabel>
+          <IonInput
+            value={newUser}
+            type="text"
+            onIonInput={(e: any) => setNewUser(e.target.value)}
+          ></IonInput>
+          <IonButton onClick={addNewUser}>Submit</IonButton>
+        </IonItem>
       </IonCard>
     </div>
   );
