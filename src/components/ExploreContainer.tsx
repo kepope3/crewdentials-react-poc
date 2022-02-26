@@ -6,6 +6,8 @@ import {
   IonItem,
   IonLabel,
   IonList,
+  IonSelect,
+  IonSelectOption,
   IonSpinner,
   IonToast,
 } from "@ionic/react";
@@ -15,6 +17,8 @@ import { useFirestore } from "../helpers/useFirestore";
 const ExploreContainer = () => {
   const [newUser, setNewUser] = useState<string>();
   const [showToast, setShowToast] = useState<boolean>(false);
+  const [isAsc, setIsAsc] = useState<boolean>(true);
+
   const { documents, addDocument, isLoading } = useFirestore("users");
 
   const addNewUser = () => {
@@ -27,6 +31,14 @@ const ExploreContainer = () => {
     }
   };
 
+  const sortUsers = () => {
+    const sortedDocs = documents?.sort((a, b) =>
+      a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+    );
+
+    return isAsc ? sortedDocs : sortedDocs?.reverse();
+  };
+
   return (
     <div className="container mx-auto">
       <IonCard>
@@ -34,13 +46,25 @@ const ExploreContainer = () => {
         {isLoading ? (
           <IonSpinner />
         ) : (
-          <IonList>
-            {documents?.map((user, i) => (
-              <IonItem key={i}>
-                <IonLabel>{user.name}</IonLabel>
-              </IonItem>
-            ))}
-          </IonList>
+          <>
+            <IonItem>
+              <IonLabel>Sort by</IonLabel>
+              <IonSelect
+                value={isAsc}
+                onIonChange={(e: any) => setIsAsc(e.target.value)}
+              >
+                <IonSelectOption value={true}>asc</IonSelectOption>
+                <IonSelectOption value={false}>dsc</IonSelectOption>
+              </IonSelect>
+            </IonItem>
+            <IonList className="h-60 max-h-full overflow-auto">
+              {sortUsers()?.map((user, i) => (
+                <IonItem key={i}>
+                  <IonLabel>{user.name}</IonLabel>
+                </IonItem>
+              ))}
+            </IonList>
+          </>
         )}
       </IonCard>
       <IonCard>
