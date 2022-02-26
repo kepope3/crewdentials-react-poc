@@ -12,6 +12,7 @@ import {
   IonToast,
 } from "@ionic/react";
 import { useState } from "react";
+import { sortByPropery } from "../helpers/sorting";
 import { useFirestore } from "../helpers/useFirestore";
 
 const ExploreContainer = () => {
@@ -19,7 +20,7 @@ const ExploreContainer = () => {
   const [showToast, setShowToast] = useState<boolean>(false);
   const [isAsc, setIsAsc] = useState<boolean>(true);
 
-  const { documents, addDocument, isLoading } = useFirestore("users");
+  const { documents: users, addDocument, isLoading } = useFirestore("users");
 
   const addNewUser = () => {
     if (newUser) {
@@ -29,14 +30,6 @@ const ExploreContainer = () => {
     } else {
       setShowToast(true);
     }
-  };
-
-  const sortUsers = () => {
-    const sortedDocs = documents?.sort((a, b) =>
-      a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
-    );
-
-    return isAsc ? sortedDocs : sortedDocs?.reverse();
   };
 
   return (
@@ -58,7 +51,7 @@ const ExploreContainer = () => {
               </IonSelect>
             </IonItem>
             <IonList className="h-60 max-h-full overflow-auto">
-              {sortUsers()?.map((user, i) => (
+              {sortByPropery(users, isAsc)?.map((user, i) => (
                 <IonItem key={i}>
                   <IonLabel>{user.name}</IonLabel>
                 </IonItem>
