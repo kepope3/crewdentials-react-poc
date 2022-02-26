@@ -2,7 +2,7 @@ import { Redirect, Route } from "react-router-dom";
 import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import Home from "./pages/Home";
-import { datastore } from "./state/firebase";
+import { firebaseApp } from "./state/firebase";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -26,11 +26,11 @@ import { createContext } from "react";
 
 setupIonicReact();
 
-export const GlobalContext = createContext({ datastore });
+export const GlobalContext = createContext({ firebaseApp });
 
 const App: React.FC = () => (
   <IonApp>
-    <GlobalContext.Provider value={{ datastore }}>
+    <GlobalContext.Provider value={{ firebaseApp }}>
       <IonReactRouter>
         <IonRouterOutlet>
           <Route exact path="/home">
