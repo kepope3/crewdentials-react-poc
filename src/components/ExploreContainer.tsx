@@ -7,18 +7,24 @@ import {
   IonLabel,
   IonList,
   IonSpinner,
+  IonToast,
 } from "@ionic/react";
 import { useState } from "react";
 import { useFirestore } from "../helpers/useFirestore";
 
 const ExploreContainer = () => {
   const [newUser, setNewUser] = useState<string>();
+  const [showToast, setShowToast] = useState<boolean>(false);
   const { documents, addDocument, isLoading } = useFirestore("users");
 
   const addNewUser = () => {
-    addDocument({ name: newUser }).then(() => {
-      setNewUser("");
-    });
+    if (newUser) {
+      addDocument({ name: newUser }).then(() => {
+        setNewUser("");
+      });
+    } else {
+      setShowToast(true);
+    }
   };
 
   return (
@@ -49,6 +55,14 @@ const ExploreContainer = () => {
           <IonButton onClick={addNewUser}>Submit</IonButton>
         </IonItem>
       </IonCard>
+      <IonToast
+        isOpen={showToast}
+        duration={1000}
+        onDidDismiss={() => setShowToast(false)}
+        message="Please enter a name"
+        animated={true}
+        color="danger"
+      ></IonToast>
     </div>
   );
 };

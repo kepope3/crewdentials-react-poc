@@ -2,7 +2,6 @@ import {
   addDoc,
   collection,
   DocumentReference,
-  Firestore,
   onSnapshot,
 } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
