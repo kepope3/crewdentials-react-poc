@@ -14,12 +14,8 @@ export const useFirestore = (collectionName: string) => {
   const globalContext = useContext(GlobalContext);
 
   useEffect(() => {
-    setData();
-  }, []);
-
-  const setData = () => {
     const existingCollection = collection(globalContext.db, collectionName);
-    onSnapshot(
+    const unsubscribe = onSnapshot(
       existingCollection,
       (snapshot) => {
         const docData: Array<any> = snapshot.docs.map((queryDocSnapshot) =>
@@ -30,7 +26,9 @@ export const useFirestore = (collectionName: string) => {
       },
       () => setIsLoading(false)
     );
-  };
+
+    return () => unsubscribe();
+  }, []);
 
   const addDocument = async (
     newDocument: any
